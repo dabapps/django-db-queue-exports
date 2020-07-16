@@ -1,0 +1,64 @@
+#!/bin/bash
+
+set -e
+
+run_pip() {
+    env/bin/pip install -r tests/requirements.txt
+}
+
+run_env_vars() {
+    export PATH=env/bin:${PATH}
+    export DEBUG=true
+    export IN_TEST=true
+}
+
+run_mypy() {
+    echo "--------------"
+    echo "Running python type checking"
+    mypy --ignore-missing-imports package_name
+    echo "Ok!"
+}
+
+run_flake8() {
+    echo ''
+    echo 'Running flake8'
+    flake8 package_name --extend-ignore=E128,E501 --exclude="migrations,settings,*/wsgi.py"
+    echo 'OK'
+}
+
+run_black() {
+    echo ''
+    echo 'Running black'
+    black package_name/ --check
+    echo 'OK'
+}
+
+run_check_migrations() {
+    if [ "$NO_MIGRATIONS" != "true" ]
+    then
+    ./manage.py makemigrations --dry-run --check # fail if makemigrations hasn't been run
+    fi
+}
+
+run_tests_with_coverage() {
+    coverage run --source=package_name --omit='*/wsgi.py,*/settings.py,*/migrations/*.py,*__init__*,*/tests.py' manage.py test --noinput $TEST_ARGS
+    if [ $# -eq 0 ]
+    then
+        echo ''
+        coverage report
+        coverage html
+    fi
+    echo ''
+}
+
+run_pip
+run_env_vars
+run_mypy
+run_flake8
+run_black
+
+# UNCOMMENT IF YOU HAVE MIGRATIONS IN YOUR PACKAGE:
+# run_check_migrations
+
+# UNCOMMENT WHEN CODE WRITTEN INSIDE PACKAGE:
+# run_tests_with_coverage
