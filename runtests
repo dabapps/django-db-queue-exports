@@ -15,7 +15,7 @@ run_env_vars() {
 run_mypy() {
     echo "--------------"
     echo "Running python type checking"
-    mypy --ignore-missing-imports package_name
+    mypy --ignore-missing-imports django_dbq_exports
     echo "Ok!"
 }
 
@@ -29,7 +29,7 @@ run_flake8() {
 run_black() {
     echo ''
     echo 'Running black'
-    black package_name/ --check
+    black django_dbq_exports/ --check
     echo 'OK'
 }
 
@@ -41,7 +41,7 @@ run_check_migrations() {
 }
 
 run_tests_with_coverage() {
-    coverage run --source=package_name --omit='*/wsgi.py,*/settings.py,*/migrations/*.py,*__init__*,*/tests.py' manage.py test --noinput $TEST_ARGS
+    coverage run --source=django_dbq_exports --omit='*/wsgi.py,*/settings.py,*/migrations/*.py,*__init__*,*/tests.py' manage.py test --noinput $TEST_ARGS
     if [ $# -eq 0 ]
     then
         echo ''
@@ -56,9 +56,5 @@ run_env_vars
 run_mypy
 run_flake8
 run_black
-
-# UNCOMMENT IF YOU HAVE MIGRATIONS IN YOUR PACKAGE:
-# run_check_migrations
-
-# UNCOMMENT WHEN CODE WRITTEN INSIDE PACKAGE:
-# run_tests_with_coverage
+run_check_migrations
+run_tests_with_coverage

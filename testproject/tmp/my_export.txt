@@ -1,0 +1,1 @@
+It worked! We created a sorted array of length 9 

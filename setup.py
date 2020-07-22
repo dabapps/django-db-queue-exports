@@ -7,14 +7,15 @@ import os
 import sys
 
 
-name = <repo_name>
-package = <package_name>
-description = <description>
+name = "django-dbq-exports"
+package = "django-dbq-exports"
+description = "An extension to django-db-queue for monitoring long running jobs"
 url = "https://www.dabapps.com/"
 project_urls = {"Source": "https://github.com/dabapps/{}".format(name)}
 author = "DabApps"
 author_email = "engineering@dabapps.com"
 license = "BSD"
+
 
 
 with open("README.md") as f:

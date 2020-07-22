@@ -1,0 +1,5 @@
+Django==2.2.12
+django-db-queue==1.3.0
+djangorestframework==3.11.0
+django-model-utils==4.0.0
+psycopg2==2.8.5

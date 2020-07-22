@@ -1,12 +1,46 @@
 # Django PyPI Template
 
-**Simple template for publishing a Django package to PyPI.**
+**An extension to django-db-queue for monitoring long running job statuses.**
 
-[![Build Status](https://travis-ci.com/dabapps/django-pypi-template.svg?token=YbH3f6uroz5f5q8RxDdW&branch=master)](https://travis-ci.com/dabapps/django-pypi-template)
+[![Build Status](https://travis-ci.com/dabapps/django-pypi-template.svg?token=YbH3f6uroz5f5q8RxDdW&branch=master)](https://travis-ci.com/dabapps/django-db-queue-exports)
 
 ## Overview
 
-A simple template for creating and publishing a Django package on the Python Packaging Index.
+An extension to django-db-queue for monitoring long running job statuses.
+
+
+## Getting started
+# Installation
+Install from PIP
+```pip install django-db-queue-exports```
+Add django_dbq_exports to your installed apps
+```
+INSTALLED_APPS = (
+    ...
+    'django_dbq_exports',
+)
+```
+Add export task to django-dbq JOBS
+```
+JOBS = {
+    ...
+    'export': {
+        'tasks': ['django-dbq-exports.tasks.export_task'],
+    },
+}
+```
+Describe your export
+```
+BaseExport derivitave goes here
+```
+Setup your export
+```
+EXPORTS = {
+    'my_export': {
+        'class': ['project.common.exports.my_export'],
+    },
+}
+```
 
 The official python documentation has an excellent tutorial on [how to package python projects](packaging.python.org/tutorials/packaging-projects). This template handles all the steps outlined in this tutorial for you.
 
