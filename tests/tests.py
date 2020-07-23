@@ -2,11 +2,9 @@ from datetime import datetime, timedelta
 from django_dbq_exports.tasks import export_task
 from django_dbq.models import Job
 from django.urls import reverse
-from django.conf import settings
 from django_dbq_exports.models import Export
 from django.test import TestCase
 from django.utils.timezone import make_aware
-from django.test.utils import override_settings
 import logging
 
 
@@ -95,18 +93,6 @@ class DBQExportViewTestCase(TestCase):
         self.assertEqual(response.json()["export_params"], {"length": 9})
 
 
-@override_settings(
-    JOBS={
-        "export": {
-            "tasks": ["django_dbq_exports.tasks.export_task"],
-            "failure_hook": "django_dbq_exports.tasks.handle_export_failure",
-        },
-    },
-    EXPORTS={
-        "my_export": "tests.tasks.generate_example_report",
-        "failing_export": "some.path.doesnt.exist",
-    },
-)
 class ExportTaskTestCase(TestCase):
     def setUp(self):
         pass
@@ -137,7 +123,6 @@ class ExportTaskTestCase(TestCase):
 
         with self.assertRaises(ImportError) as context:
             export_task(Job.objects.first())
-
         logging.basicConfig(level=logging.INFO)
 
         export.refresh_from_db()

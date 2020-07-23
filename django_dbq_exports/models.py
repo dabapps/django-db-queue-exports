@@ -1,7 +1,6 @@
 from django.db import models
 from django_dbq.models import Job
-from django.contrib.postgres.fields import JSONField
-
+from jsonfield import JSONField
 from model_utils import Choices
 import uuid
 
@@ -37,9 +36,6 @@ class Export(models.Model):
     status_detail = models.CharField(max_length=2048, null=True)
     result_reference = models.CharField(max_length=2048, null=True)
     export_params = JSONField(null=True)
-    # ^^^^ Limited to just postgres db's - not great.
-    # Maybe consider a more generic text field handling parsing manually
-    # or a custom field
 
     class Meta:
         ordering = ["created"]
