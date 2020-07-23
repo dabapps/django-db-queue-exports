@@ -1,19 +1,16 @@
 # django-db-queue-exports
 
-**An extension to django-db-queue for monitoring long running job statuses.**
+**An extension to django-db-queue for monitoring long running tasts statuses.
+The aim of this extension is to simplify the execution of long running tasks, and allow for polling of tasks statuses during execution.**
 
 [![Build Status](https://travis-ci.com/dabapps/django-db-queue-exports.svg)](https://travis-ci.com/dabapps/django-db-queue-exports)
-
-## Overview
-
-An extension to django-db-queue for monitoring long running tasts statuses.
-The aim of this extension is to simplify the execution of long running tasks, and allow for polling of tasks statuses during execution.
-
 
 ## Getting started
 ### Installation
 Install from PIP
-```pip install django-db-queue-exports```
+```
+pip install django-db-queue-exports
+```
 Add `django_dbq_exports` to your installed apps
 ```
 INSTALLED_APPS = (
@@ -21,14 +18,15 @@ INSTALLED_APPS = (
     'django_dbq_exports',
 )
 ```
-Add export task to django-dbq JOBS list in settings.py
+Add `django_dbq_exports.tasks.export_task` to django-dbq JOBS list in settings.py
 ```
 JOBS = {
     ...
     'export': {
         'tasks': ['django_dbq_exports.tasks.export_task'],
     },
-}```
+}
+```
 Configure the url, something like this:
 ```
 urlpatterns = [
