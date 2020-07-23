@@ -1,34 +1,46 @@
-# Django PyPI Template
+# django-db-queue-exports
 
 **An extension to django-db-queue for monitoring long running job statuses.**
 
-[![Build Status](https://travis-ci.com/dabapps/django-pypi-template.svg?token=YbH3f6uroz5f5q8RxDdW&branch=master)](https://travis-ci.com/dabapps/django-db-queue-exports)
+[![Build Status](https://travis-ci.com/dabapps/django-db-queue-exports.svg)](https://travis-ci.com/dabapps/django-db-queue-exports)
 
 ## Overview
 
-An extension to django-db-queue for monitoring long running job statuses.
+An extension to django-db-queue for monitoring long running tasts statuses.
+The aim of this extension is to simplify the execution of long running tasks, and allow for polling of tasks statuses during execution.
 
 
 ## Getting started
-# Installation
+### Installation
 Install from PIP
 ```pip install django-db-queue-exports```
-Add django_dbq_exports to your installed apps
+Add `django_dbq_exports` to your installed apps
 ```
 INSTALLED_APPS = (
     ...
     'django_dbq_exports',
 )
 ```
-Add export task to django-dbq JOBS list. 
+Add export task to django-dbq JOBS list in settings.py
 ```
 JOBS = {
     ...
     'export': {
         'tasks': ['django_dbq_exports.tasks.export_task'],
     },
-}
+}```
+Configure the url, something like this:
 ```
+urlpatterns = [
+    ...
+    url(r'^export/', include("django_dbq_exports.urls")),
+]
+```
+Remember to run your migrations
+```
+python manage.py migrate
+```
+### Describe your task
 Create your export task, for example:
 ```
 def generate_example_report(export_params):
@@ -45,20 +57,31 @@ def generate_example_report(export_params):
 
     return output_file 
 ```
-Setup your exports
+Configure your task in settings.py
 ```
 EXPORTS = {
     "my_export": "my_project.tasks.generate_example_report",
 }
 ```
-Setup your url
+
+### Running the task
+Simply `POST` to the pre-configured endpoint with the following json
 ```
-urlpatterns = [
-    ...
-    url(r'^export/', include("django_dbq_exports.urls")),
-]
+{
+    "export_type" : "my_export"
+} 
 ```
-Remember to run your migrations
+With optional parameters to be received by your previously created export task
 ```
-python manage.py migrate
+{
+    "export_type" : "my_export",
+    "export_params" : {
+        "length": 256
+    }
+}
 ```
+### Querying the task status
+Simple `GET` the same endpoint with a url parameter = to the export `id` field returned from the POST request.
+Or `GET` the same endpoint with no parameters to return a list of all exports.
+
+
