@@ -9,19 +9,18 @@ from django.utils.timezone import make_aware
 from django.test.utils import override_settings
 import logging
 
-class ExportModelTestCase(TestCase):
-    
-    def setUp(self):
-        self.base_export = Export.objects.create(export_type='test_export')
 
+class ExportModelTestCase(TestCase):
+    def setUp(self):
+        self.base_export = Export.objects.create(export_type="test_export")
 
     def test_create_initates_job(self):
         self.assertEqual(Job.objects.count(), 1)
-        Export.objects.create(export_type='test_export')
+        Export.objects.create(export_type="test_export")
         self.assertEqual(Job.objects.count(), 2)
 
     def test_subsequant_save_does_not_initiate_job(self):
-        export = Export.objects.create(export_type='test_export')
+        export = Export.objects.create(export_type="test_export")
         self.assertEqual(Job.objects.count(), 2)
         export.status_detail = "Changing the object"
         export.save()
@@ -29,15 +28,21 @@ class ExportModelTestCase(TestCase):
 
     def test_update_status(self):
         self.assertEqual(self.base_export.status, Export.STATUS.QUEUED)
-        self.base_export.update_status(Export.STATUS.FAILED, "Testing failure status update")
+        self.base_export.update_status(
+            Export.STATUS.FAILED, "Testing failure status update"
+        )
         self.base_export.refresh_from_db()
         self.assertEqual(self.base_export.status, Export.STATUS.FAILED)
-        self.assertEqual(self.base_export.status_detail, "Testing failure status update")
+        self.assertEqual(
+            self.base_export.status_detail, "Testing failure status update"
+        )
 
     def test_calculate_run_time_with_started_and_completed(self):
         timedif = 3
         self.base_export.started = make_aware(datetime(2020, 6, 1, 12, 30, 0))
-        self.base_export.completed = self.base_export.started + timedelta(seconds=timedif)
+        self.base_export.completed = self.base_export.started + timedelta(
+            seconds=timedif
+        )
         self.base_export.save()
         self.assertEqual(self.base_export.runtime, timedif)
 
@@ -52,65 +57,64 @@ class ExportModelTestCase(TestCase):
 
 
 class DBQExportViewTestCase(TestCase):
-    
     def setUp(self):
-        self.base_export = Export.objects.create(export_type='test_export')
+        self.base_export = Export.objects.create(export_type="test_export")
 
     def test_list_exports(self):
-        response = self.client.get(reverse('dbq_export:dbq-export-list-create'))
+        response = self.client.get(reverse("dbq_export:dbq-export-list-create"))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.json()), 1)
-        self.assertEqual(response.json()[0]['id'], str(self.base_export.id))
-    
+        self.assertEqual(response.json()[0]["id"], str(self.base_export.id))
+
     def test_retreive_single_export(self):
-        response = self.client.get(reverse('dbq_export:dbq-export-retreive', kwargs={'pk': str(self.base_export.id)}))
+        response = self.client.get(
+            reverse(
+                "dbq_export:dbq-export-retreive",
+                kwargs={"pk": str(self.base_export.id)},
+            )
+        )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()['id'], str(self.base_export.id))
-    
+        self.assertEqual(response.json()["id"], str(self.base_export.id))
+
     def test_create_export(self):
         self.assertEqual(Export.objects.count(), 1)
 
-        export_data = {
-            "export_type": "my_export",
-            "export_params": {
-                "length": 9
-            }
-        }
+        export_data = {"export_type": "my_export", "export_params": {"length": 9}}
 
         response = self.client.post(
-            reverse('dbq_export:dbq-export-list-create'),
+            reverse("dbq_export:dbq-export-list-create"),
             data=export_data,
-            content_type='application/json'
+            content_type="application/json",
         )
 
         self.assertEqual(response.status_code, 201)
         self.assertEqual(Export.objects.count(), 2)
         export = Export.objects.last()
-        self.assertEqual(response.json()['id'], str(export.id))
-        self.assertEqual(response.json()['export_type'], 'my_export')
-        self.assertEqual(response.json()['export_params'], {'length': 9})
+        self.assertEqual(response.json()["id"], str(export.id))
+        self.assertEqual(response.json()["export_type"], "my_export")
+        self.assertEqual(response.json()["export_params"], {"length": 9})
 
 
 @override_settings(
-    JOBS = {
-        'export': {
-            'tasks': ['django_dbq_exports.tasks.export_task'],
-            'failure_hook' : 'django_dbq_exports.tasks.handle_export_failure',
+    JOBS={
+        "export": {
+            "tasks": ["django_dbq_exports.tasks.export_task"],
+            "failure_hook": "django_dbq_exports.tasks.handle_export_failure",
         },
     },
-
-    EXPORTS = {
-        'my_export': 'tests.tasks.generate_example_report',
-        'failing_export': 'some.path.doesnt.exist'
-    }
+    EXPORTS={
+        "my_export": "tests.tasks.generate_example_report",
+        "failing_export": "some.path.doesnt.exist",
+    },
 )
 class ExportTaskTestCase(TestCase):
-
     def setUp(self):
         pass
 
     def test_example_report_task_complete(self):
-        export = Export.objects.create(export_type="my_export", export_params={"length": 9})
+        export = Export.objects.create(
+            export_type="my_export", export_params={"length": 9}
+        )
 
         self.assertEqual(export.status, Export.STATUS.QUEUED)
         self.assertEqual(Job.objects.count(), 1)
@@ -118,7 +122,7 @@ class ExportTaskTestCase(TestCase):
         export_task(Job.objects.first())
         export.refresh_from_db()
         self.assertEqual(export.status, Export.STATUS.COMPLETE)
-        self.assertEqual(export.result_reference, 'testproject/tmp/my_export.txt')
+        self.assertEqual(export.result_reference, "testproject/tmp/my_export.txt")
 
     def test_export_import_fail(self):
 
@@ -127,19 +131,16 @@ class ExportTaskTestCase(TestCase):
         self.assertEqual(export.status, Export.STATUS.QUEUED)
         self.assertEqual(Job.objects.count(), 1)
 
-        logging.basicConfig(level=logging.CRITICAL) # Disable logging temporarily to keep tests clean
+        logging.basicConfig(
+            level=logging.CRITICAL
+        )  # Disable logging temporarily to keep tests clean
 
         with self.assertRaises(ImportError) as context:
             export_task(Job.objects.first())
 
         logging.basicConfig(level=logging.INFO)
-        
+
         export.refresh_from_db()
 
         self.assertEqual(export.status, Export.STATUS.FAILED)
         self.assertEqual(export.status_detail, "Export function import failed.")
-
-
-        
-
-

@@ -17,7 +17,6 @@ author_email = "engineering@dabapps.com"
 license = "BSD"
 
 
-
 with open("README.md") as f:
     readme = f.read()
 
