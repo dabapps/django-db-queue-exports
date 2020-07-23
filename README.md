@@ -38,7 +38,7 @@ Remember to run your migrations
 ```
 python manage.py migrate
 ```
-### Describe your task
+### Describing your task
 Create your export task, for example:
 ```
 def generate_example_report(export_params):
