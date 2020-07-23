@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django_dbq_exports.models import Export
 
+
 class ExportSerializer(serializers.ModelSerializer):
 
     export_params = serializers.DictField(required=False)

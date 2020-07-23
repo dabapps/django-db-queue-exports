@@ -7,8 +7,8 @@ import os
 import sys
 
 
-name = "django-dbq-exports"
-package = "django-dbq-exports"
+name = "django-db-queue-exports"
+package = "django_dbq_exports"
 description = "An extension to django-db-queue for monitoring long running jobs"
 url = "https://www.dabapps.com/"
 project_urls = {"Source": "https://github.com/dabapps/{}".format(name)}
