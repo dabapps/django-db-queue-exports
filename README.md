@@ -5,6 +5,11 @@ The aim of this extension is to simplify the execution of long running tasks, an
 
 [![Build Status](https://travis-ci.com/dabapps/django-db-queue-exports.svg)](https://travis-ci.com/dabapps/django-db-queue-exports)
 
+Supported and tested against:
+- Django 2.2
+- django-db-queue 1.3.0
+- Python 3.6, 3.7 and 3.8
+
 ## Getting started
 ### Installation
 Install from PIP
