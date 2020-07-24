@@ -43,6 +43,7 @@ Remember to run your migrations
 ```
 python manage.py migrate
 ```
+## Usage
 ### Describing your task
 A task is a standard python function. It must take an `export_params` dictionary parameter. This can be utilised for any parameters required within your task.
 The task can also optionally return a string value which will be stored in `Export.result_reference`. This is best used for file paths or URLs when you need to download or access the results of the task.
@@ -110,7 +111,6 @@ By default all exports will be created with a priority of 1. This is passed thro
 Or through the Export creation itself.
 ```
 Export.objects.create(export_type="my_export", priority=3)
-
 ```
 
 ## Code of conduct
