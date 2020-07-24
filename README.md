@@ -44,7 +44,9 @@ Remember to run your migrations
 python manage.py migrate
 ```
 ### Describing your task
-Create your export task, for example:
+A task is a standard python function. It must take an `export_params` dictionary parameter. This can be utilised for any parameters required within your task.
+The task can also optionally return a string value which will be stored in `Export.result_reference`. This is best used for file paths or URLs when you need to download or access the results of the task.
+Here's an example task:
 ```
 def generate_example_report(export_params):
     output_file = 'my_project/tmp/myfile.csv'
@@ -60,6 +62,7 @@ def generate_example_report(export_params):
 
     return output_file 
 ```
+
 Configure your task in settings.py
 ```
 EXPORTS = {
@@ -68,7 +71,8 @@ EXPORTS = {
 ```
 
 ### Running the task
-Simply `POST` to the pre-configured endpoint with the following json
+Simply `POST` to the pre-configured endpoint with the following json.
+The `export_type` should map to a configured key within the `settings.EXPORTS` dictionary.
 ```
 {
     "export_type" : "my_export"
@@ -87,6 +91,27 @@ With optional parameters to be received by your previously created export task
 Simple `GET` the same endpoint with a url parameter = to the export `id` field returned from the POST request.
 Or `GET` the same endpoint with no parameters to return a list of all exports.
 
+
+### Creating a custom view
+If you don't wish to use the built in views and urls to trigger exports, create your own! To trigger an export yourself simply create an export object like so:
+```
+Export.objects.create(export_type="my_export")
+```
+The newly created export object will handle the DBQ job creation itself. 
+
+### Overriding priority
+By default all exports will be created with a priority of 1. This is passed through to django-dbq. If you wish to override this you can do so via the POST method.
+```
+{
+    "export_type" : "my_export",
+    "priority" : 3
+} 
+```
+Or through the Export creation itself.
+```
+Export.objects.create(export_type="my_export", priority=3)
+
+```
 
 ## Code of conduct
 
