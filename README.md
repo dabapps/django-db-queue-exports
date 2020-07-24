@@ -1,6 +1,6 @@
 # django-db-queue-exports
 
-**An extension to django-db-queue for monitoring long running tasts statuses.
+**An extension to [django-db-queue](https://github.com/dabapps/django-db-queue) for monitoring long running task statuses.
 The aim of this extension is to simplify the execution of long running tasks, and allow for polling of tasks statuses during execution.**
 
 [![Build Status](https://travis-ci.com/dabapps/django-db-queue-exports.svg)](https://travis-ci.com/dabapps/django-db-queue-exports)
@@ -83,3 +83,6 @@ Simple `GET` the same endpoint with a url parameter = to the export `id` field r
 Or `GET` the same endpoint with no parameters to return a list of all exports.
 
 
+## Code of conduct
+
+For guidelines regarding the code of conduct when contributing to this repository please review [https://www.dabapps.com/open-source/code-of-conduct/](https://www.dabapps.com/open-source/code-of-conduct/)
