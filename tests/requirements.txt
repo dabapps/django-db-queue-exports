@@ -3,3 +3,4 @@ black==19.10b0
 coverage==4.5.4
 flake8==3.7.9
 mypy==0.740
+psycopg2==2.8.4
