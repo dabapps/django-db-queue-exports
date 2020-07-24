@@ -3,7 +3,7 @@
 **An extension to [django-db-queue](https://github.com/dabapps/django-db-queue) for monitoring long running task statuses.
 The aim of this extension is to simplify the execution of long running tasks, and allow for polling of tasks statuses during execution.**
 
-[![Build Status](https://travis-ci.com/dabapps/django-db-queue-exports.svg?branch=master)](https://travis-ci.com/dabapps/django-db-queue-exports)
+[![Build Status](https://travis-ci.com/dabapps/django-db-queue-exports.svg?token=gFw2G3a8PohgNBo8f8Nm&branch=master)](https://travis-ci.com/dabapps/django-db-queue-exports)
 
 Supported and tested against:
 - Django 2.2
