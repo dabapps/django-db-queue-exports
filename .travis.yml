@@ -21,4 +21,11 @@ cache:
 install:
   - pip install -r tests/requirements.txt
 
-script: ./runtests  
+script: 
+  - python manage.py test
+
+# after_script:
+#   - |
+#       python igor.py combine_html
+#       pip install codecov
+#       codecov -X gcov --file coverage.xml
