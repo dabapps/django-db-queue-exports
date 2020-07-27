@@ -49,19 +49,21 @@ A task is a standard python function. It must take an `export_params` dictionary
 The task can also optionally return a string value which will be stored in `Export.result_reference`. This is best used for file paths or URLs when you need to download or access the results of the task.
 Here's an example task:
 ```
+import random
+
 def generate_example_report(export_params):
-    output_file = 'my_project/tmp/myfile.csv'
+    output_file = 'myfile.csv'
     array_length = export_params.get("length", None)
     x = []
 
     for i in range(array_length if array_length else 99):
         x.append(random.randint(1, 10))
 
-    x = x.sort()
+    x.sort()
     with open(output_file, 'w') as f:
-        f.write(",".join(x))
+        f.write(",".join(str(y) for y in x))
 
-    return output_file 
+    return output_file
 ```
 
 Configure your task in settings.py
