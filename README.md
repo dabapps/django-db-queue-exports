@@ -4,6 +4,7 @@
 The aim of this extension is to simplify the execution of long running tasks, and allow for polling of tasks statuses during execution.**
 
 [![Build Status](https://travis-ci.com/dabapps/django-db-queue-exports.svg?token=gFw2G3a8PohgNBo8f8Nm&branch=master)](https://travis-ci.com/dabapps/django-db-queue-exports)
+[![pypi release](https://img.shields.io/pypi/v/django-db-queue-exports.svg)](https://pypi.python.org/pypi/django-db-queue-exports)
 
 Supported and tested against:
 - Django 2.2
