@@ -11,13 +11,15 @@ Supported and tested against:
 - django-db-queue 1.3.0
 - Python 3.6, 3.7 and 3.8
 
+## What and why?
+Have you ever been in a position where you need to run a report, or email several thousand users without blocking your main process? `django-db-queue` can handle this perfectly for you through the use of a seperate `worker` process and a queue of `tasks`. However, it's difficult to determine the state of your task. This package aims to address this. Through the use of a pre-configured view, url and generic task, you can use a single endpoint to create new exports and query their statuses.
+
 ## Getting started
 ### Installation
-Install from PIP
 ```
 pip install django-db-queue-exports
 ```
-Add `django_dbq_exports` to your installed apps
+Add `django_dbq_exports` to the installed apps, found inside your settings.py
 ```
 INSTALLED_APPS = (
     ...
@@ -45,9 +47,9 @@ Remember to run your migrations
 python manage.py migrate
 ```
 ## Usage
-### Describing your task
-A task is a standard python function. It must take an `export_params` dictionary parameter. This can be utilised for any parameters required within your task.
-The task can also optionally return a string value which will be stored in `Export.result_reference`. This is best used for file paths or URLs when you need to download or access the results of the task.
+### Describing your export
+An `export` is a standard python function. It must take an `export_params` dictionary parameter. This can be utilised for any parameters required within your task.
+The export can also optionally return a string value which will be stored in `Export.result_reference`. This is best used for file paths or URLs when you need to download or access the results of the task.
 Here's an example task:
 ```
 import random
@@ -92,7 +94,7 @@ With optional parameters to be received by your previously created export task
 }
 ```
 ### Querying the task status
-Simple `GET` the same endpoint with a url parameter = to the export `id` field returned from the POST request.
+`GET` the same endpoint with a url parameter = to the export `id` field returned from the POST request.
 Or `GET` the same endpoint with no parameters to return a list of all exports.
 
 
