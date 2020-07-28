@@ -48,8 +48,8 @@ python manage.py migrate
 ```
 ## Usage
 ### Describing your export
-An `export` is a standard python function. It must take an `export_params` dictionary parameter. This can be utilised for any parameters required within your task.
-The export can also optionally return a string value which will be stored in `Export.result_reference`. This is best used for file paths or URLs when you need to download or access the results of the task.
+An `export` is a standard python function. It must take an `export_params` dictionary parameter. This can be utilised for any parameters required within your export.
+The export can also optionally return a string value which will be stored in `Export.result_reference`. This is best used for file paths or URLs when you need to download or access the results of the export.
 Here's an example task:
 ```
 import random
@@ -103,17 +103,17 @@ If you don't wish to use the built in views and urls to trigger exports, create 
 ```
 Export.objects.create(export_type="my_export")
 ```
-The newly created export object will handle the DBQ job creation itself. 
+The newly created export object will handle the `django-db-queue` job creation. 
 
 ### Overriding priority
-By default all exports will be created with a priority of 1. This is passed through to django-dbq. If you wish to override this you can do so via the POST method.
+By default all exports will be created with a priority of 1. This is passed through to `django-db-queue`. If you wish to override this you can do so via the POST method.
 ```
 {
     "export_type" : "my_export",
     "priority" : 3
 } 
 ```
-Or through the Export creation itself.
+Or through the Export creation directly.
 ```
 Export.objects.create(export_type="my_export", priority=3)
 ```
